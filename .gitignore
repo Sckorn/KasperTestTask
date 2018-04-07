@@ -1,4 +1,9 @@
 *.cache
 *.suo
+*.dll
+*.exe
+*.pdb
 KasperTestTaskServer/KasperTestTaskServer/bin/*
 KasperTestTaskServer/KasperTestTaskServer/obj/*
+SimpleDbConnector/SimpleDbConnector/bin/*
+SimpleDbConnector/SimpleDbConnector/obj/*

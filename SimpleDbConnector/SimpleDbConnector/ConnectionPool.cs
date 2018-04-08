@@ -83,10 +83,6 @@ namespace SimpleDbConnector
             if (connection.State == ConnectionState.Closed)
             {
                 connection.Open();
-                DbCommand cmd = connection.CreateCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "set client_encoding = 'UTF-8'";
-                cmd.ExecuteNonQuery();
             }
         }
 

@@ -11,7 +11,7 @@ Target Server Type    : SQL Server
 Target Server Version : 110000
 File Encoding         : 65001
 
-Date: 2018-04-07 22:09:38
+Date: 2018-04-08 00:36:57
 */
 
 
@@ -21,10 +21,10 @@ Date: 2018-04-07 22:09:38
 DROP TABLE [KasperTestTask].[t_file_list]
 GO
 CREATE TABLE [KasperTestTask].[t_file_list] (
-[id] int NOT NULL ,
+[id] int NOT NULL IDENTITY(1,1),
 [basename] varchar(255) NULL ,
-[fullname] varchar(255) NULL ,
-[size] float(53) NULL ,
+[fullname] varchar(1024) NULL ,
+[size] int NULL ,
 [recstatus] int NULL 
 )
 
@@ -36,10 +36,4 @@ GO
 -- ----------------------------
 CREATE INDEX [id] ON [KasperTestTask].[t_file_list]
 ([id] ASC) 
-GO
-
--- ----------------------------
--- Primary Key structure for table t_file_list
--- ----------------------------
-ALTER TABLE [KasperTestTask].[t_file_list] ADD PRIMARY KEY ([id])
 GO

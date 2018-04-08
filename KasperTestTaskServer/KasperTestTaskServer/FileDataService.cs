@@ -17,7 +17,7 @@ namespace KasperTestTaskServer
             }
             catch (Exception e)
             {
-                Globals.Trace("Exception in add file service: " + e.Message);
+                Globals.Trace("Exception in add file service: " + e.Message  + "\n" + e.StackTrace);
                 return -1;
             }
         }

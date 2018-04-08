@@ -40,6 +40,7 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
@@ -56,6 +57,12 @@
     <Compile Include="FileDataService.cs" />
     <Compile Include="Globals\Globals.cs" />
     <Compile Include="IFileDataService.cs" />
+    <Compile Include="MainFileServiceInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MainFileServiceInstaller.Designer.cs">
+      <DependentUpon>MainFileServiceInstaller.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainFileService.cs">
       <SubType>Component</SubType>
     </Compile>

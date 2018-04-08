@@ -17,13 +17,15 @@ namespace KasperTestTaskServer.Db
 
         public int AddFileRecord(String basename, String full_name, double size)
         {
-            String[] parameters = new String[] {
-                basename,
-                full_name,
-                size.ToString()
+            Dictionary<String, object> parameters = new Dictionary<string, object> {
+                { "@base_name", basename },
+                { "@full_name", full_name },
+                { "@size", size }
             };
 
-            return int.Parse(ExecProcValue("f_add_file", parameters));
+            var ret = ExecProcValue("KasperTestTask.f_add_file", parameters);
+
+            return int.Parse(ret);
         }
     }
 }

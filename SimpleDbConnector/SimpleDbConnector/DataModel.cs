@@ -22,7 +22,7 @@ namespace SimpleDbConnector
             this.connection_pool = connection_pool;
         }
 
-        public String ExecProcValue(String procedureName, string[] procedureParameters, DbConnection connection = null)
+        public String ExecProcValue(String procedureName, Dictionary<String, object> procedureParameters, DbConnection connection = null)
         {
             var result = "";
             ConnectionPoolNode node = null;
@@ -34,11 +34,14 @@ namespace SimpleDbConnector
                     node = connection_pool.GetNode();
                     connection = node.connection;
                 }
-                DbCommand cmd = connection.CreateCommand();
-                cmd.CommandType = CommandType.Text;
 
-                string query = ConstructProcQueryString(procedureName, procedureParameters, true);
-                cmd.CommandText = query;
+                var cmd = MakeCommand(connection, procedureName, procedureParameters);
+
+                DbParameter p_ = cmd.CreateParameter();
+                p_.ParameterName = "@value";
+                p_.Value = -1;
+                p_.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(p_);
 
                 try
                 {
@@ -63,8 +66,7 @@ namespace SimpleDbConnector
                         }
                     }
 
-                    result = dt.Rows[0]["value"].ToString();
-
+                    result = cmd.Parameters["@value"].Value.ToString();
                 }
                 finally
                 {
@@ -81,7 +83,7 @@ namespace SimpleDbConnector
             return result;
         }
 
-        public DataTable ExecProc(String procedureName, string[] procedureParameters, DbConnection connection = null, Boolean silent = false)
+        public DataTable ExecProc(String procedureName, Dictionary<String, object> procedureParameters, DbConnection connection = null, Boolean silent = false)
         {
             ConnectionPoolNode node = null;
             DataTable dt = null;
@@ -94,11 +96,7 @@ namespace SimpleDbConnector
                     connection = node.connection;
                 }
 
-                DbCommand cmd = connection.CreateCommand();
-                cmd.CommandType = CommandType.Text;
-
-                string query = ConstructProcQueryString(procedureName, procedureParameters, false);
-                cmd.CommandText = query;
+                var cmd = MakeCommand(connection, procedureName, procedureParameters);
                 
                 try
                 {
@@ -136,38 +134,21 @@ namespace SimpleDbConnector
             return dt;
         }
 
-        private string ConstructProcQueryString(string procedureName, string[] procedureParameters, Boolean oneValue)
+        private DbCommand MakeCommand(DbConnection connection, String procedure_name, Dictionary<String, object> parameters)
         {
-            string result = string.Empty;
+            DbCommand cmd = connection.CreateCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = procedure_name;
 
-            if (procedureName != null && !procedureName.Equals(string.Empty))
+            foreach (KeyValuePair<string, object> param in parameters)
             {
-                if (!oneValue)
-                {
-                    result = "SELECT * FROM " + procedureName + "(";
-                }
-                else
-                {
-                    result = "SELECT " + procedureName + "(";
-                }
-                int i = 0;
-                foreach (string param in procedureParameters)
-                {
-                    string paramRepresentation = string.Empty;
-                    paramRepresentation += (param == null ? "null" : ("'" + param.ToString() + "'"));
-                    result += ((i == 0) ? "" : ", ") + paramRepresentation;
-                    i++;
-                }
-                result += ")";
-
-                if (oneValue)
-                {
-                    result += " as value;";
-                }
-                else result += ";";
+                DbParameter p = cmd.CreateParameter();
+                p.ParameterName = param.Key;
+                p.Value = param.Value;
+                cmd.Parameters.Add(p);
             }
-            return result;
 
+            return cmd;
         }
     }
 }

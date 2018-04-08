@@ -32,7 +32,7 @@ namespace KasperTestTaskServer
 
                 Globals.LogFilePath = System.Configuration.ConfigurationManager.AppSettings["logFile"];
 
-                svcHost = new ServiceHost(typeof(MainFileService));
+                svcHost = new ServiceHost(typeof(FileDataService));
                 svcHost.Open();
 
                 var serviceName = System.Configuration.ConfigurationManager.AppSettings["serviceName"];
@@ -42,8 +42,7 @@ namespace KasperTestTaskServer
                     System.Configuration.ConfigurationManager.ConnectionStrings[0].ProviderName
                     );
 
-                //Globals.background = new BackgroundProcess();
-
+                Globals.Trace("Service is up!!!");
             }
             catch (Exception ex)
             {

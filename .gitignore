@@ -314,3 +314,5 @@ ASALocalRun/
 
 # MSBuild Binary and Structured Log
 *.binlog
+
+third_party/boost/*

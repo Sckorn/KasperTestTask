@@ -1,5 +1,7 @@
 USE KasperTestTask
 GO  
+DROP PROCEDURE KasperTestTask.f_add_file;  
+GO 
 CREATE PROCEDURE KasperTestTask.f_add_file
     @base_name nvarchar(255),   
     @full_name nvarchar(1024),

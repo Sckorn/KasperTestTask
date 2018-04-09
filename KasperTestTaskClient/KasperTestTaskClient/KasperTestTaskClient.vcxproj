@@ -149,9 +149,12 @@
   <ItemGroup>
     <ClCompile Include="DirectoryHandler.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SingleFileHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectoryHandler.h" />
+    <ClInclude Include="SimpleFileData.h" />
+    <ClInclude Include="SingleFileHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,6 +4,7 @@
 #include <curl/curl.h>
 
 #include "DirectoryHandler.h"
+#include "SingleFileHandler.h"
 
 int main(int argc, char * argv[])
 {
@@ -11,14 +12,14 @@ int main(int argc, char * argv[])
 	po::options_description desc("Allowed options");
 	desc.add_options()
 		("help,h", "produce help message")
-		("directory,d", po::value<std::string>(), "directory which will be scanned for files")
-		("file,f", po::value<std::string>(), "specific file to, data of which will be sent to server");
+		("input,i", po::value<std::string>(), "directory which will be scanned for files")
+		;
 
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, desc), vm);
 	po::notify(vm);
 
-	if (!vm.count("directory") && !vm.count("file"))
+	if (!vm.count("input"))
 	{
 		std::cerr << "Insufficient argument data!" << std::endl;
 		return 1;
@@ -26,9 +27,19 @@ int main(int argc, char * argv[])
 
 	try
 	{
-		auto file_data_list = kasper_test_task_client::scanDirectory(vm["directory"].as<std::string>());
+		boost::filesystem::path p(vm["input"].as<std::string>());
+		std::vector<kasper_test_task_client::SimpleFileData> file_data_list;
+		if (boost::filesystem::is_directory(p))
+		{
+			file_data_list = kasper_test_task_client::scanDirectory(p);
+		}
+		else
+		{
+			file_data_list.push_back(kasper_test_task_client::getFileData(p));
+		}
+		
 		if (!file_data_list.size())
-			throw std::runtime_error("Supplied directory is empty!");
+			throw std::runtime_error("No files found by input path!");
 
 		CURL *curl;
 		CURLcode res;
@@ -41,7 +52,6 @@ int main(int argc, char * argv[])
 
 			for (const auto &file_data : file_data_list)
 			{
-				/* Now specify the POST data */
 				std::stringstream ss;
 				ss << "http://localhost:10000/FileDataService/json/WriteFileDataToDb";
 				ss << "?basename=" << file_data.basename << "&filepath=" << file_data.full_name
@@ -49,12 +59,10 @@ int main(int argc, char * argv[])
 
 				auto str = ss.str();
 				curl_easy_setopt(curl, CURLOPT_URL, str.c_str());
-				/* example.com is redirected, so we tell libcurl to follow redirection */
 				curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
-				/* Perform the request, res will get the return code */
 				res = curl_easy_perform(curl);
-				/* Check for errors */
+				
 				if (res != CURLE_OK)
 					std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
 			}

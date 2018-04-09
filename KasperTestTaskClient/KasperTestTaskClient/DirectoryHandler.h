@@ -5,16 +5,11 @@
 
 #include <boost/filesystem.hpp>
 
+#include "SimpleFileData.h"
+
 namespace kasper_test_task_client
 {
-struct SimpleFileData
-{
-	std::string basename;
-	std::string full_name;
-	size_t size;
-};
-
-std::vector<SimpleFileData> scanDirectory(const std::string &dir_path);
+std::vector<SimpleFileData> scanDirectory(const boost::filesystem::path &dir_path);
 }
 
 #endif

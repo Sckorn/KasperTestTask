@@ -24,9 +24,18 @@
     <ClCompile Include="DirectoryHandler.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
+    <ClCompile Include="SingleFileHandler.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectoryHandler.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleFileData.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleFileHandler.h">
       <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>
